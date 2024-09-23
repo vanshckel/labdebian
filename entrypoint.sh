@@ -10,11 +10,27 @@ service ssh restart
 
 ARGO_RUN="cloudflared tunnel --no-autoupdate --logfile /root/.cloudflared/log.log run --token ${ARGO_AUTH}"
 
-cat > /etc/supervisor/conf.d/damon.conf << EOF
+cat > /etc/supervisor/supervisord.conf << EOF
+[unix_http_server]
+file=/var/run/supervisor.sock   ; (the path to the socket file)
+chmod=0700                       ; sockef file mode (default 0700)
+
 [supervisord]
 nodaemon=true
 logfile=/dev/null
 pidfile=/run/supervisord.pid
+pidfile=/var/run/supervisord.pid ; (supervisord pidfile;default supervisord.pid)
+childlogdir=/var/log/supervisor            ; ('AUTO' child log dir, default $TEMP)
+
+
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+
+[supervisorctl]
+serverurl=unix:///var/run/supervisor.sock 
+
+[include]
+files = /etc/supervisor/conf.d/*.conf
 
 [program:argo]
 command=/root/.cloudflared/$ARGO_RUN

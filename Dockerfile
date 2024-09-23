@@ -5,7 +5,9 @@ WORKDIR /root
 COPY ./entrypoint.sh ./
 
 RUN apt-get update &&\
-    apt-get -y install openssh-server wget supervisor nginx unzip &&\
+    apt-get -y install openssh-server wget supervisor nginx unzip  curl&&\
+    # apt-get install -y systemd &&\
+    # apt install systemctl -y &&\
 	apt-get clean
 
 # Configure nginx
