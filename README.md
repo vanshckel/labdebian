@@ -1,3 +1,3 @@
-# labhost
-host for lab
+# labdebian
+debian for lab
 
